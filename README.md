@@ -4,12 +4,12 @@
 
 **Plan your stats, race, family, weapon, traits and spells before you spend a single point.**
 
-[![Live](https://img.shields.io/badge/live-clover--rpg--builder.netlify.app-1f6b4a?style=for-the-badge&logo=netlify&logoColor=white)](https://clover-rpg-builder.netlify.app)
+[![Live](https://img.shields.io/badge/live-GitHub%20Pages-1f6b4a?style=for-the-badge&logo=github&logoColor=white)](https://iskeyzi.github.io/Clover-RPG-Builder/)
 ![Vanilla JS](https://img.shields.io/badge/vanilla-JavaScript-8a6410?style=for-the-badge&logo=javascript&logoColor=white)
 ![Zero dependencies](https://img.shields.io/badge/dependencies-0-62c592?style=for-the-badge)
 ![Single file](https://img.shields.io/badge/single-HTML%20file-1b2a22?style=for-the-badge&logo=html5&logoColor=white)
 
-[**Open the builder →**](https://clover-rpg-builder.netlify.app)
+[**Open the builder →**](https://iskeyzi.github.io/Clover-RPG-Builder/)
 
 </div>
 
@@ -66,8 +66,8 @@ Leaving `k` empty uses an **unofficial estimate of 1**.
 There is nothing to build or install. It is a single `index.html`.
 
 ```bash
-git clone https://github.com/<your-user>/<your-repo>.git
-cd <your-repo>
+git clone https://github.com/iskeyzi/Clover-RPG-Builder.git
+cd Clover-RPG-Builder
 # just open it
 open index.html          # macOS
 xdg-open index.html      # Linux
@@ -87,7 +87,7 @@ python3 -m http.server 8000
 Builds are encoded as a compact **Base58** string (about 40 characters or less) containing level, stats, race, family, enchant, weapon class, proficiency, traits and spell passives.
 
 - **Code:** paste it into the import field.
-- **Link:** `https://clover-rpg-builder.netlify.app/#b-<code>` loads the build directly.
+- **Link:** `https://iskeyzi.github.io/Clover-RPG-Builder/#b-<code>` loads the build directly.
 - The selected weapon, calibration `k` and conditional toggles are stored **only in your browser** (`localStorage`), not in the code.
 
 ## 🗂️ Project structure

@@ -286,7 +286,8 @@ $('mlist').addEventListener('click',e=>{const b=e.target.closest('.tr');if(!b)re
 $('code').addEventListener('focus',e=>e.target.select());
 async function cp(btn,txt,lab){try{await navigator.clipboard.writeText(txt);btn.textContent='Copiado!'}catch(e){$('code').value=txt;$('code').select();btn.textContent='Copie o texto'}setTimeout(()=>{btn.textContent=lab;$('code').value=mk()},2500)}
 $('cc').addEventListener('click',()=>cp($('cc'),mk(),'Código'));
-$('cl').addEventListener('click',()=>cp($('cl'),'https://clover-rpg-builder.netlify.app/#b-'+mk(),'Link'));
+const SITE='https://iskeyzi.github.io/Clover-RPG-Builder/';
+$('cl').addEventListener('click',()=>cp($('cl'),SITE+'#b-'+mk(),'Link'));
 function fromHash(){try{const m=location.hash.match(/^#b-([1-9A-HJ-NP-Za-km-z]+)$/);if(m){$('imp').value=m[1];tab('p1');$('sh').open=true;say('Link com build detectado: toque em Importar para carregar.')}}catch(e){}}
 addEventListener('hashchange',fromHash);
 const P=/^([+−-])(\d+(?:\.\d+)?)(%?) (.+)$/;

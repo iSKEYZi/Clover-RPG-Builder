@@ -25,7 +25,11 @@ h1{font:700 30px/1.1 Fraunces,Georgia,serif;margin:8px 0 4px}
 .ctl{display:flex;align-items:center;gap:6px}
 .ctl input{width:100%;min-width:0;text-align:center;font:600 18px Figtree,sans-serif;border:0;background:transparent;color:var(--ink);padding:4px 0}
 .ctl button{flex:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--ink);font-size:18px;cursor:pointer}
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;background:var(--bg);padding:10px 0;margin-top:12px;border-bottom:1px solid var(--ln)}
+.bar{background:var(--bg);padding:10px 0;margin-top:12px;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}
+.bar.stk{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;margin-top:0;border-top:0}
+.advb{font:600 15px Figtree,sans-serif;color:var(--ac);background:var(--sf);border:1.5px dashed var(--ac);border-radius:10px;cursor:pointer;min-height:84px;padding:8px}
+.advb[aria-expanded="true"]{background:var(--acs);border-style:solid}
+.bs{font:600 12.5px Figtree,sans-serif;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px}
 .kpi{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;margin-bottom:8px}
 .kpi b{font-size:18px}
 .kpi input{width:64px;padding:4px 6px;border:1px solid var(--ln);border-radius:6px;background:var(--sf);color:var(--ink);font:inherit}
@@ -85,28 +89,28 @@ button.cb small.cd2{color:var(--gold);font-weight:600}
 <main>
 <h1>Clover RPG · Builder de Personagem</h1>
 <p class="sub">Monte stats, raça, família, arma, traits e magia. Os buffs aparecem por fonte e somados.</p>
-<div class="bar">
-  <div class="tabs" id="tabs" role="tablist"><button class="on" data-t="p1" role="tab" aria-selected="true">Personagem</button><button data-t="p2" role="tab" aria-selected="false">Traits e magias</button></div>
-  <div class="kpi"><span>Pts de skill <b id="pts">0</b>/<b id="ptt">1</b></span><span>Pts de stat <b id="sp">0</b>/<b id="spt">2</b></span><span>Marks <b id="mk">0</b></span><span>Traits <b id="cnt">0</b></span><span>Insight <b id="ins">0</b></span></div>
-  <p class="need" id="warn" role="status"></p>
-</div>
-<div class="row acts"><button id="apply">Ajustar ao mínimo</button><button id="clear">Limpar</button><button id="copy">Copiar build</button></div>
-<p class="need" id="need"></p>
+<div class="tabs" id="tabs" role="tablist"><button class="on" data-t="p1" role="tab" aria-selected="true">Personagem</button><button data-t="p2" role="tab" aria-selected="false">Traits e magias</button></div>
 <div id="p1" class="pg">
-<h2 class="th">Stats</h2>
-<section class="stats" id="stats"></section>
 <h2 class="th">Personagem</h2>
 <div class="sel" id="chr"></div>
 <p class="need">Proficiência de arma: cada nível custa 2 pontos de stat e 15 Insight; acima do nível 3 exige a recomendação de Percival.</p>
 <h2 class="th">Arma</h2>
 <div class="sel"><label>Arma equipada<select id="wsel"></select></label><label>Calibração k (%)<input id="kin" type="number" min="0" step="any" placeholder="padrão 1"></label></div>
+<h2 class="th">Stats</h2>
+<section class="stats" id="stats"></section>
+<div id="adv" hidden>
+<h2 class="th">Stats avançados</h2>
+<h3 class="bg">Dano da arma</h3>
 <p class="need">Dano com proficiência = base × (1 + scaling × prof × k/100). O jogo não publica o k. Para descobrir: veja o dano da arma no tooltip e calcule k = (tooltip ÷ base − 1) × 100 ÷ (scaling × prof). Vazio = estimativa k=1, que não é um número oficial.</p>
 <div id="wout"></div>
-<h2 class="th">Status finais</h2>
-<p class="need">Soma raça, família e traits. Não inclui o que cada ponto de atributo rende, porque o jogo não publica esse valor.</p>
-<div class="bt" id="fin"></div>
-<h2 class="th">Buffs totais (por fonte e somados)</h2>
 <div id="buffs"></div>
+</div>
+<div class="bar" id="kpibox">
+  <div class="kpi"><span>Pts de skill <b id="pts">0</b>/<b id="ptt">1</b></span><span>Pts de stat <b id="sp">0</b>/<b id="spt">2</b></span><span>Marks <b id="mk">0</b></span><span>Traits <b id="cnt">0</b></span><span>Insight <b id="ins">0</b></span></div>
+  <p class="need" id="warn" role="status"></p>
+</div>
+<div class="row acts" id="acts"><button id="apply">Ajustar ao mínimo</button><button id="clear">Limpar</button><button id="copy">Copiar build</button></div>
+<p class="need" id="need"></p>
 <details class="share" id="sh"><summary>Compartilhar build</summary>
 <p class="need">Copie o código ou o link e envie. Para importar, cole o código (ou o texto de “Copiar build”) no campo de baixo.</p>
 <div class="code"><input id="code" readonly aria-label="Seu código"><button id="cc">Código</button><button id="cl">Link</button></div>
@@ -243,15 +247,18 @@ function renderMag(){
  const g=GM[st.mag];
  $('mlist').innerHTML=!g?'<p class="empty">Escolha uma magia para ver as passivas.</p>':!g.p.length?`<p class="empty">${g.msg}</p>`:g.p.map(x=>{const on=st.mp.includes(x.n),r=x.r;
   return `<button class="tr${on?' on':''}" data-p="${x.n}" aria-pressed="${on}"><span class="h"><span class="n">${on?'✓ ':''}${x.n}</span><span class="k">${x.k} pts de skill</span></span><span class="e">${x.e}</span>${r.insight?chip(`${r.insight} Insight`,'g'):''}${r.marks?chip(`${r.marks} Marks`,'g'):''}</button>`}).join('')}
+let advOpen=false;
+function advBtn(){return `<button class="advb" id="advbtn" aria-expanded="${advOpen}">${advOpen?'Ocultar avançados ▴':'Stats avançados ▾'}</button>`}
+function setAdv(v){advOpen=v;$('adv').hidden=!v;$('advbtn').outerHTML=advBtn()}
 function buildStats(){
- $('stats').innerHTML=['Nível',...S].map((s,i)=>`<div class="st"><label for="s${i}">${s}</label><div class="ctl"><button data-i="${i}" data-d="-1" aria-label="Diminuir ${s}">−</button><input id="s${i}" data-i="${i}" type="number" min="${i?0:1}"${i?'':' max="80"'} inputmode="numeric" value="${i?st.s[i-1]:st.lvl}"><button data-i="${i}" data-d="1" aria-label="Aumentar ${s}">+</button></div></div>`).join('');
+ $('stats').innerHTML=['Nível',...S].map((s,i)=>`<div class="st"><label for="s${i}">${s}</label><div class="ctl"><button data-i="${i}" data-d="-1" aria-label="Diminuir ${s}">−</button><input id="s${i}" data-i="${i}" type="number" min="${i?0:1}"${i?'':' max="80"'} inputmode="numeric" value="${i?st.s[i-1]:st.lvl}"><button data-i="${i}" data-d="1" aria-label="Aumentar ${s}">+</button></div></div>`).join('')+advBtn();
 }
 const LV=80,sTot=()=>st.s.reduce((a,b)=>a+b,0)+2*st.wp,spent=()=>st.sel.reduce((a,x)=>a+(M[x].k||0),0)+curPass().reduce((a,x)=>a+x.k,0);
 function addCost(n){const t=M[n];return st.sel.includes(n)?0:(t.k||0)+(t.p?addCost(t.p):0)}
 function flash(t,ok){const el=$('warn');el.textContent=t;el.style.color=ok?'var(--ac)':'var(--bad)';clearTimeout(flash.t);flash.t=setTimeout(()=>{el.textContent=''},4000)}
 function clampStat(i,v){v=Math.max(0,Math.floor(+v)||0);if(!i)return Math.min(LV,Math.max(1,v));const c=st.s[i-1];return Math.min(v,Math.max(c,2*(st.lvl-1)-(sTot()-c)))}
 function setStat(i,v){const w=Math.max(0,Math.floor(+v)||0);v=clampStat(i,w);if(i&&w>v)flash('Sem pontos de stat sobrando: cada nível a partir do 2 dá 2 pontos. Suba o nível.');if(i)st.s[i-1]=v;else st.lvl=v;$('s'+i).value=v}
-$('stats').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;setStat(i,(i?st.s[i-1]:st.lvl)+ +b.dataset.d);render()});
+$('stats').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='advbtn'){setAdv(!advOpen);return}const i=+b.dataset.i;setStat(i,(i?st.s[i-1]:st.lvl)+ +b.dataset.d);render()});
 $('stats').addEventListener('input',e=>{const i=+e.target.dataset.i,raw=e.target.value;if(raw==='')return;const v=clampStat(i,raw);if(i&&+raw>v)flash('Sem pontos de stat sobrando: cada nível a partir do 2 dá 2 pontos. Suba o nível.');if(i)st.s[i-1]=v;else st.lvl=v;if(String(v)!==raw)e.target.value=v;render()});
 $('stats').addEventListener('change',e=>{const i=+e.target.dataset.i;e.target.value=i?st.s[i-1]:st.lvl});
 function add(n){const t=M[n];if(t.p)add(t.p);if(!st.sel.includes(n))st.sel.push(n)}
@@ -313,13 +320,15 @@ const grp=l=>/Taken|Fall|Ragdoll|Recovery|Decay/.test(l)?GO[1]:/Damage|PEN|Enemy
 function buffTxt(){const {m,cnd}=collect(),a=[...m.values()].filter(o=>o.v).map(o=>`${fv(o)} ${o.l}`).join(', ')||'nenhum',c=cnd.filter(x=>!x.on).map(x=>`${x.b} (${x.cond})`).join('; ');return a+(c?' | Condicionais inativos: '+c:'')}
 let lastC=[];
 function renderBuffs(){
- const {m,sp,ina,cnd}=collect(),g={};lastC=cnd;
- [...m.values()].filter(o=>o.v).forEach(o=>(g[grp(o.l)]=g[grp(o.l)]||[]).push(o));
- let h=GO.filter(k=>g[k]).map(k=>`<h3 class="bg">${k}</h3><div class="bt">${g[k].map(o=>`<div class="bx"><b>${fv(o)}</b><span>${o.l}</span><small>${[...new Set(o.src)].join(' · ')}</small></div>`).join('')}</div>`).join('');
- if(cnd.length)h+=`<h3 class="bg">Condicionais (toque para simular ativo)</h3><p class="need">Valem só em situações específicas. Ao ativar, o valor entra nos buffs somados e nos Status finais.</p><div class="bt">${cnd.map((o,i)=>{const x=P.exec(o.b),v=(x[1]==='+'?1:-1)*+x[2];return `<button class="bx cb${o.on?' on':''}" data-ci="${i}" aria-pressed="${o.on}"><b>${fv({v,u:x[3]})}</b><span>${x[4]}</span><small>${o.src}</small><small class="cd2">${o.on?'✓ ativo · ':''}${o.cond}</small></button>`}).join('')}</div>`;
- if(sp.length)h+=`<h3 class="bg">Efeitos especiais (sem valor numérico)</h3><ul class="sp">${sp.map(x=>`<li>${x}</li>`).join('')}</ul>`;
- if(ina.length)h+=`<p class="need">Inativos: ${ina.join('; ')}.</p>`;
- $('buffs').innerHTML=h||'<p class="empty">Escolha raça, família, traits ou magia para ver os buffs somados.</p>'}
+  const {m,sp,ina,cnd}=collect(),g={};lastC=cnd;
+  [...m.values()].filter(o=>o.v).forEach(o=>(g[grp(o.l)]=g[grp(o.l)]||[]).push(o));
+  let h='';
+  if(cnd.length)h+=`<h3 class="bg">Condicionais (toque para simular ativo)</h3><p class="need">Valem só em situações específicas. Ao ativar, o valor entra nos Status finais.</p><div class="bt">${cnd.map((o,i)=>{const x=P.exec(o.b),v=(x[1]==='+'?1:-1)*+x[2];return `<button class="bx cb${o.on?' on':''}" data-ci="${i}" aria-pressed="${o.on}"><b>${fv({v,u:x[3]})}</b><span>${x[4]}</span><small>${o.src}</small><small class="cd2">${o.on?'✓ ativo · ':''}${o.cond}</small></button>`}).join('')}</div>`;
+  h+=`<h3 class="bg">Status finais</h3><p class="need">Soma de raça, família, traits e magia, com a origem de cada valor. Não inclui o que cada ponto de atributo rende, porque o jogo não publica esse valor.</p>`;
+  h+=GO.filter(k=>g[k]).map(k=>`<h4 class="bs">${k}</h4><div class="bt">${g[k].map(o=>`<div class="bx"><b>${fv(o)}</b><span>${o.l}</span><small>${[...new Set(o.src)].join(' · ')}</small></div>`).join('')}</div>`).join('')||'<p class="empty">Escolha raça, família, traits ou magia para ver os valores somados.</p>';
+  if(sp.length)h+=`<h3 class="bg">Efeitos especiais (sem valor numérico)</h3><ul class="sp">${sp.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  if(ina.length)h+=`<p class="need">Inativos: ${ina.join('; ')}.</p>`;
+  $('buffs').innerHTML=h}
 $('buffs').addEventListener('click',e=>{const b=e.target.closest('.cb');if(!b)return;const o=lastC[+b.dataset.ci];if(!o)return;st.on=st.on.includes(o.id)?st.on.filter(x=>x!==o.id):[...st.on,o.id];render()});
 function buildChar(){
  const op=(a,s,f=x=>x)=>a.map(x=>`<option${f(x)===s?' selected':''}>${f(x)}</option>`).join('');
@@ -340,18 +349,16 @@ st.wn=W.some(w=>w.n===st.wn)?st.wn:'';
 {const c=st.cal||{};st.cal={k:Math.max(0,+c.k||0)}}
 function tot(){const m=[...collect().m.values()],g=(l,u='')=>m.filter(o=>o.l===l&&o.u===u).reduce((a,o)=>a+o.v,0),sm=re=>m.filter(o=>o.u==='%'&&re.test(o.l)).reduce((a,o)=>a+o.v,0);return{g,pf:sm(/^(Physical|All) Damage$/),pen:sm(/^Physical PEN$/),mf:sm(/^(Spell|Magic|All|[A-Z]\w+ Magic) Damage$/)}}
 function renderX(){
- const X=tot(),g=X.g,F=x=>x?(x>0?'+':'−')+f1(Math.abs(x)):'—',Pc=x=>x?F(x)+'%':'—',cd=(l,v,n='')=>`<div class="bx"><b>${v}</b><span>${l}</span><small>${n}</small></div>`;
+ const X=tot(),cd=(l,v,n='')=>`<div class="bx"><b>${v}</b><span>${l}</span><small>${n}</small></div>`;
  const wl=W.filter(w=>!st.wc||CL[w.c]===st.wc);if(!wl.some(w=>w.n===st.wn))st.wn='';
  $('wsel').innerHTML='<option value="">—</option>'+wl.map(w=>`<option value="${w.n}"${w.n===st.wn?' selected':''}>${w.n} · ${CL[w.c]} · dano ${w.d} · prof ${w.q}</option>`).join('');
  const w=W.find(x=>x.n===st.wn),fin=x=>pd(x)*(1+X.pf/100);
  $('wout').innerHTML=w?`<div class="bt">${cd('Dano base',w.d)}${cd('Com proficiência '+st.wp,f1(pd(w)),`scaling ${w.k} × prof ${st.wp} × k ${st.cal.k||1}%${st.cal.k?'':' (estimativa)'}`)}${cd('Final com buffs',f1(fin(w)),'+'+f1(X.pf)+'% dano físico')}${cd('Final × velocidade',f1(fin(w)*w.s),'vel. '+w.s)}${cd('Alcance',w.a)}${cd('Peso',w.w)}${cd('Scaling',w.k)}${cd('Req. proficiência',w.q,st.wp<w.q?'⚠ você tem '+st.wp:'ok')}</div>`:'<p class="empty">Escolha uma arma.</p>';
-const used=/^(Health|Energy|Mana Regen|Max Resolve|Physical Resistance|Magic Resistance|PvE Damage|Damage vs Mobs|Physical PEN|(Physical|All|Spell|Magic) Damage|[A-Z]\w+ Magic Damage)$/,
-  ex=[...collect().m.values()].filter(o=>o.v&&!used.test(o.l)).map(o=>[o.l,fv(o),[...new Set(o.src)].join(' · ')]);
-$('fin').innerHTML=[['Vida (bônus)',F(g('Health')),'raça, família'],['Energia',F(g('Energy')),'raça, família'],['Regen. mana',F(g('Mana Regen'))+' / '+Pc(g('Mana Regen','%')),'fixo / %'],['Resolve máx.',F(g('Max Resolve')),'raça'],['Res. física',F(g('Physical Resistance'))+' / '+Pc(g('Physical Resistance','%')),'raça, família'],['Res. mágica',F(g('Magic Resistance'))+' / '+Pc(g('Magic Resistance','%')),'raça, família'],['Dano físico',Pc(X.pf),'raça, família, traits'],['PEN físico',Pc(X.pen),'traits'],['Dano mágico',Pc(X.mf),'buffs somados'],['Dano PvE (total)',Pc(g('PvE Damage')+g('PvE Damage','%')+g('Damage vs Mobs','%')),'traits (Damage vs Mobs), só contra mobs'],...ex].map(a=>cd(...a)).join('')}
+}
 $('wsel').addEventListener('change',e=>{st.wn=e.target.value;render()});
 $('kin').addEventListener('input',e=>{st.cal.k=Math.max(0,+e.target.value||0);render()});
 $('kin').value=st.cal.k||'';
-function tab(t){document.querySelectorAll('#tabs button').forEach(b=>{const on=b.dataset.t===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});['p1','p2'].forEach(id=>{$(id).hidden=id!==t});window.scrollTo(0,0)}
+function tab(t){document.querySelectorAll('#tabs button').forEach(b=>{const on=b.dataset.t===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});['p1','p2'].forEach(id=>{$(id).hidden=id!==t});const k=$('kpibox');k.classList.toggle('stk',t==='p2');if(t==='p1')$('p1').insertBefore(k,$('acts'));else $('p2').insertBefore(k,$('p2').firstChild);window.scrollTo(0,0)}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)tab(b.dataset.t)});
 buildStats();buildChar();render();fromHash();
 </script>

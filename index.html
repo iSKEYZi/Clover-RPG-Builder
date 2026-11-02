@@ -82,52 +82,57 @@ button.cb{font:inherit;color:var(--ink);cursor:pointer;width:100%}
 button.cb.on{border-color:var(--ac);background:var(--acs);box-shadow:0 0 0 1px var(--ac)}
 button.cb small.cd2{color:var(--gold);font-weight:600}
 .sp{margin:8px 0 0;padding-left:18px;font-size:14px}
+.lang{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:14px;color:var(--mut)}
+.lang button{border:1px solid var(--ln);background:var(--sf);color:var(--ink);border-radius:999px;font:600 13px Figtree,sans-serif;line-height:1;padding:8px 12px;cursor:pointer}
+.lang button.on{border-color:var(--ac);background:var(--acs);box-shadow:0 0 0 1px var(--ac)}
 :focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 </style>
 </head>
 <body>
 <main>
-<h1>Clover RPG · Builder de Personagem</h1>
-<p class="sub">Monte stats, raça, família, arma, traits e magia. Os buffs aparecem por fonte e somados.</p>
-<div class="tabs" id="tabs" role="tablist"><button class="on" data-t="p1" role="tab" aria-selected="true">Personagem</button><button data-t="p2" role="tab" aria-selected="false">Traits e magias</button></div>
+<h1 data-x="h1">Clover RPG · Builder de Personagem</h1>
+<p class="sub" data-x="sub">Monte stats, raça, família, arma, traits e magia. Os buffs aparecem por fonte e somados.</p>
+<div class="lang"><span>Languages:</span><button data-l="pt" aria-label="Português (Brasil)">PT-BR</button><button data-l="en" aria-label="English (US)">ENG</button></div>
+<div class="tabs" id="tabs" role="tablist"><button class="on" data-t="p1" data-x="tab1" role="tab" aria-selected="true">Personagem</button><button data-t="p2" data-x="tab2" role="tab" aria-selected="false">Traits e magias</button></div>
 <div id="p1" class="pg">
-<h2 class="th">Personagem</h2>
+<h2 class="th" data-x="hChar">Personagem</h2>
 <div class="sel" id="chr"></div>
-<p class="need">Proficiência de arma: cada nível custa 2 pontos de stat e 15 Insight; acima do nível 3 exige a recomendação de Percival.</p>
-<h2 class="th">Arma</h2>
-<div class="sel"><label>Arma equipada<select id="wsel"></select></label><label>Calibração k (%)<input id="kin" type="number" min="0" step="any" placeholder="padrão 1"></label></div>
+<p class="need" data-x="profNote">Proficiência de arma: cada nível custa 2 pontos de stat e 15 Insight; acima do nível 3 exige a recomendação de Percival.</p>
+<h2 class="th" data-x="hWeapon">Arma</h2>
+<div class="sel"><label><span data-x="lWeapon">Arma equipada</span><select id="wsel"></select></label><label><span data-x="lK">Calibração k (%)</span><input id="kin" type="number" min="0" step="any" placeholder="padrão 1" data-xp="kinPh"></label></div>
 <h2 class="th">Stats</h2>
 <section class="stats" id="stats"></section>
 <div id="adv" hidden>
-<h2 class="th">Stats avançados</h2>
-<h3 class="bg">Dano da arma</h3>
-<p class="need">Dano com proficiência = base × (1 + scaling × prof × k/100). O jogo não publica o k. Para descobrir: veja o dano da arma no tooltip e calcule k = (tooltip ÷ base − 1) × 100 ÷ (scaling × prof). Vazio = estimativa k=1, que não é um número oficial.</p>
+<h2 class="th" data-x="hAdv">Stats avançados</h2>
+<h3 class="bg" data-x="hDmg">Dano da arma</h3>
+<p class="need" data-x="kNote">Dano com proficiência = base × (1 + scaling × prof × k/100). O jogo não publica o k. Para descobrir: veja o dano da arma no tooltip e calcule k = (tooltip ÷ base − 1) × 100 ÷ (scaling × prof). Vazio = estimativa k=1, que não é um número oficial.</p>
 <div id="wout"></div>
 <div id="buffs"></div>
 </div>
 <div class="bar" id="kpibox">
-  <div class="kpi"><span>Pts de skill <b id="pts">0</b>/<b id="ptt">1</b></span><span>Pts de stat <b id="sp">0</b>/<b id="spt">2</b></span><span>Marks <b id="mk">0</b></span><span>Traits <b id="cnt">0</b></span><span>Insight <b id="ins">0</b></span></div>
+  <div class="kpi"><span><span data-x="kSkill">Pts de skill</span> <b id="pts">0</b>/<b id="ptt">1</b></span><span><span data-x="kStat">Pts de stat</span> <b id="sp">0</b>/<b id="spt">2</b></span><span>Marks <b id="mk">0</b></span><span>Traits <b id="cnt">0</b></span><span>Insight <b id="ins">0</b></span></div>
   <p class="need" id="warn" role="status"></p>
 </div>
-<div class="row acts" id="acts"><button id="apply">Ajustar ao mínimo</button><button id="clear">Limpar</button><button id="copy">Copiar build</button></div>
+<div class="row acts" id="acts"><button id="apply" data-x="bApply">Ajustar ao mínimo</button><button id="clear" data-x="bClear">Limpar</button><button id="copy" data-x="bCopy">Copiar build</button></div>
 <p class="need" id="need"></p>
-<details class="share" id="sh"><summary>Compartilhar build</summary>
-<p class="need">Copie o código ou o link e envie. Para importar, cole o código (ou o texto de “Copiar build”) no campo de baixo.</p>
-<div class="code"><input id="code" readonly aria-label="Seu código"><button id="cc">Código</button><button id="cl">Link</button></div>
-<div class="code"><input id="imp" placeholder="Cole o código aqui" aria-label="Código para importar"><button id="ib">Importar</button></div>
+<details class="share" id="sh"><summary data-x="shSum">Compartilhar build</summary>
+<p class="need" data-x="shNote">Copie o código ou o link e envie. Para importar, cole o código (ou o texto de “Copiar build”) no campo de baixo.</p>
+<div class="code"><input id="code" readonly aria-label="Seu código" data-xa="ariaCode"><button id="cc" data-x="bCode">Código</button><button id="cl">Link</button></div>
+<div class="code"><input id="imp" placeholder="Cole o código aqui" aria-label="Código para importar" data-xp="impPh" data-xa="ariaImp"><button id="ib" data-x="bImp">Importar</button></div>
 <p class="need" id="imsg" role="status"></p></details>
 </div>
 <div id="p2" class="pg" hidden>
-<section class="mag"><h2>Magia (grimório)</h2><p class="need">Passivas aprendidas no Grimoire Echo, no Inner Realm. Toque para somar ao custo.</p><div class="chips" id="mchips"></div><div id="mlist"></div></section>
+<section class="mag"><h2 data-x="hMagic">Magia (grimório)</h2><p class="need" data-x="magNote">Passivas aprendidas no Grimoire Echo, no Inner Realm. Toque para somar ao custo.</p><div class="chips" id="mchips"></div><div id="mlist"></div></section>
 <h2 class="th">Traits</h2>
-<div class="tools"><input id="q" type="search" placeholder="Buscar trait…" aria-label="Buscar trait"><div class="chips" id="chips"></div></div>
+<div class="tools"><input id="q" type="search" placeholder="Buscar trait…" aria-label="Buscar trait" data-xp="qPh" data-xa="ariaQ"><div class="chips" id="chips"></div></div>
 <div id="list"></div>
 </div>
-<footer>Traits e passivas de magia: wiki do Clover RPG. Regras usadas: cada nível a partir do 2 dá 2 pontos de stat e 1 de skill (o nível 1 começa sem pontos; traits e passivas gastam só os de skill); nível máximo 80. Raças, famílias, enchants e armas vêm de wikis da comunidade e podem estar desatualizados ou incompletos; os bônus de família por elemento só contam com a magia certa. O jogo está em early access e os números mudam: confira no jogo antes de gastar pontos. O código de compartilhar inclui nível, stats, raça, família, enchant, classe de arma, proficiência, traits, magia e passivas; a arma escolhida, o k e os condicionais ficam salvos só no navegador.</footer>
+<footer data-x="foot">Traits e passivas de magia: wiki do Clover RPG. Regras usadas: cada nível a partir do 2 dá 2 pontos de stat e 1 de skill (o nível 1 começa sem pontos; traits e passivas gastam só os de skill); nível máximo 80. Raças, famílias, enchants e armas vêm de wikis da comunidade e podem estar desatualizados ou incompletos; os bônus de família por elemento só contam com a magia certa. O jogo está em early access e os números mudam: confira no jogo antes de gastar pontos. O código de compartilhar inclui nível, stats, raça, família, enchant, classe de arma, proficiência, traits, magia e passivas; a arma escolhida, o k e os condicionais ficam salvos só no navegador.</footer>
 </main>
 <script>
 
-const S=['Força','Agilidade','Vitalidade','Inteligência','Resistência','Poder Mágico'],K=['str','agi','vit','int','end','mp'];
+let lang='pt';try{if(localStorage.getItem('clover-lang')==='en')lang='en'}catch(e){}
+const SPT=['Força','Agilidade','Vitalidade','Inteligência','Resistência','Poder Mágico'],SEN=['Strength','Agility','Vitality','Intelligence','Endurance','Magic Power'],K=['str','agi','vit','int','end','mp'];let S=SPT;
 const T=[
 ['Rapid Recovery','Vitalidade',4,{vit:10},'Reduz à metade o tempo para se recuperar após ser nocauteado.'],
 ['Pacifist','Vitalidade',4,{vit:15,marks:200},'Fora de combate, regenera vida 2× mais rápido.'],
@@ -185,7 +190,7 @@ const G=[
 ['Light',[],'Passivas da Light ainda não cadastradas: faltam dados da wiki.']
 ].map(([n,p,msg])=>({n,msg,p:p.map(([n,k,r,e])=>({n,k,r,e}))}));
 const GM=Object.fromEntries(G.map(g=>[g.n,g]));
-const FR=['Lendária','Épica','Incomum','Comum'],WC=['Leve','Média','Pesada'];
+const FRPT=['Lendária','Épica','Incomum','Comum'],FREN=['Legendary','Epic','Uncommon','Common'],WC=['Leve','Média','Pesada'],WCEN=['Light','Medium','Heavy'];let FR=FRPT;
 const RC=[['Human',['+15% NPC Sell Price']],['Elf',['−15% Spell Mana Cost','+20 Energy']],['Dark Elf',['+5% Spell Damage','+10% Mana Regen','+10 Energy']],['Eldritch',['+2.5% Physical Damage','+10 Health','+2 Max Resolve']],['Dryad',['+10 Energy'],'cura breve após sofrer dano'],['Lesser Demon',['+5% Physical Resistance','+20 Health'],'Wrath Unbound e Hellsworn (efeito de contrato não confirmado)'],['Lesser Angel',['+10% Magic Resistance','+40 Energy'],'Heavenbound e Divine Retribution (efeito de contrato não confirmado)']];
 const FM=[['Clover',0,['+10% XP','+10% Mastery Gain','+10% Proficiency Gain','+10% All Professions XP']],['Chrono',0,['+5% Time Magic Damage','+15 Energy','+15% Energy Regen']],['Morningstar',0,['+5% Magic Damage','+15% Health Regen','+5% Magic Resistance']],['Anchor',0,['+5% Physical Damage','+20 Health','+10% Health Regen','+5% Physical Resistance']],
 ['Solstice',1,['+5% Light Magic Damage','+12 Energy']],['Sable',1,['+5% Beast Magic Damage','+10% Health Regen']],['Eclipse',1,['+5% Shadow Magic Damage','+4% Magic Resistance']],['Vermillion',1,['+5% Flame Magic Damage','+15 Health']],['Tempest',1,['+5% Wind Magic Damage','+10% Energy Regen']],['Raijin',1,['+5% Lightning Magic Damage','+4% Physical Damage']],
@@ -195,6 +200,7 @@ const EN=[['Nova','queima o alvo a cada alguns golpes'],['Frostbite','congela o 
 const TB={'Reinforced Blade':['+5% Physical PEN'],'Tempered Body':['−5% Physical Damage Taken'],'Spellguard':['−5% Magic Damage Taken'],'Potion Savant':['+20% Potion Effect'],'Mad Alchemist':['+25% Potion Drink Speed'],'Graceful Escape':['+10% Dodge Frames'],'Climbing Mastery':['+15% Climbing'],'Pack Mule':['+10 Carry Weight'],'Bargain Master':['+15% NPC Sell Price'],'Mob Slayer':['+10% Damage vs Mobs'],'Tailwind':['+15% Broom Speed'],'Weapons Expert':['+50% Proficiency Gain'],'Pick-Me-Up':['−40% Item Loss on Death'],'Swift Execution':['+20% Execution Speed'],'Liver Shot':['+20% Misdirect Damage'],'Soft Landing':['−50% Fall Damage'],'Iron Rebound':['−15% Ragdoll Duration'],'Steadfast':['+20% Resolve Decay Speed'],'Rapid Recovery':['−50% Knockdown Recovery Time'],'Efficient Ignition':['+25% Bomb Save Chance'],'Lucky Miner':['+30% Double Ore Chance']};
 const TC={'Hyper Adrenaline':[['−10% All Damage Taken','vida abaixo de 25%']],'Survivor’s Fury':[['+10% All Damage','vida abaixo de 25%']],'Overflow':[['+15% Physical PEN','após quebrar o bloqueio do inimigo (4 s)']],'Exhaustion Blow':[['−50% Enemy Resolve','ao quebrar o bloqueio do inimigo']],'Strong Core':[['−10% All Damage Taken','após ter o bloqueio quebrado (breve)']],'Superiority Complex':[['+5% Magic Damage','contra oponente com a mesma magia']],'Dirty Casting':[['+15% Magic Damage','próxima magia, fora de combate, grimório guardado']],'Pacifist':[['+100% Health Regen','fora de combate']],'Arcane Rebound':[['+5% Mana Restored','ao aparar ou esquivar de um ataque']]};
 const CATS=['Todas','Vitalidade','Força','Agilidade','Inteligência','Resistência','Poder Mágico','Múltiplos stats','Sem stat','Selecionadas'];
+const CATEN=['All','Vitality','Strength','Agility','Intelligence','Endurance','Magic Power','Multiple Stats','No Stat','Selected'];
 let st={s:[0,0,0,0,0,0],lvl:1,sel:[],bud:'',cat:'Todas',mag:'',mp:[],race:'',fam:'',ench:'',wc:'',wp:0,wn:'',on:[],cal:{k:0}};
 try{const o=JSON.parse(localStorage.getItem('clover-build')||'null');if(o&&o.s&&o.s.length===6){st={...st,...o,cat:'Todas'}}}catch(e){}
 st.sel=st.sel.filter(n=>M[n]);st.on=Array.isArray(st.on)?st.on.filter(x=>typeof x==='string'):[];st.race=RC.some(r=>r[0]===st.race)?st.race:'';st.fam=FM.some(f=>f[0]===st.fam)?st.fam:'';st.ench=EN.some(x=>x[0]===st.ench)?st.ench:'';st.wc=WC.includes(st.wc)?st.wc:'';st.wp=Math.min(10,Math.max(0,Math.floor(+st.wp)||0));
@@ -204,29 +210,29 @@ const chain=t=>(t.k||0)+(t.p?chain(M[t.p]):0);
 const chip=(x,k)=>`<span class="c ${k}">${x}</span>`;
 function chips(t){const r=t.r,o=[];
  K.forEach((k,i)=>{if(r[k])o.push(chip(`${S[i]} ${r[k]}`,st.s[i]>=r[k]?'ok':'bad'))});
- if(r.lvl)o.push(chip(`Nível ${r.lvl}`,st.lvl>=r.lvl?'ok':'bad'));
- if(t.p)o.push(chip(`Requer ${t.p}`,st.sel.includes(t.p)?'ok':''));
+ if(r.lvl)o.push(chip(`${ln('Nível','Level')} ${r.lvl}`,st.lvl>=r.lvl?'ok':'bad'));
+ if(t.p)o.push(chip(`${ln('Requer','Requires')} ${t.p}`,st.sel.includes(t.p)?'ok':''));
  if(r.marks)o.push(chip(`${r.marks} Marks`,'g'));
- if(r.kills)o.push(chip(`${r.kills} abates de NPC`,'g'));
- if(r.quest)o.push(chip(`Missão: ${r.quest}`,'g'));
- if(r.pkills)o.push(chip(`${r.pkills} abates de jogadores`,'g'));
- if(r.special)o.push(chip(`Desbloqueio: ${r.special}`,'g'));
+ if(r.kills)o.push(chip(`${r.kills} ${ln('abates de NPC','NPC kills')}`,'g'));
+ if(r.quest)o.push(chip(`${ln('Missão','Quest')}: ${r.quest}`,'g'));
+ if(r.pkills)o.push(chip(`${r.pkills} ${ln('abates de jogadores','player kills')}`,'g'));
+ if(r.special)o.push(chip(`${ln('Desbloqueio','Unlock')}: ${r.special}`,'g'));
  return o.join('')}
 function need(){const n=[0,0,0,0,0,0];let lv=0;
  st.sel.forEach(x=>{const r=M[x].r;K.forEach((k,i)=>{n[i]=Math.max(n[i],r[k]||0)});lv=Math.max(lv,r.lvl||0)});return{n,lv}}
 function save(){try{localStorage.setItem('clover-build',JSON.stringify({s:st.s,lvl:st.lvl,sel:st.sel,bud:st.bud,mag:st.mag,mp:st.mp,race:st.race,fam:st.fam,ench:st.ench,wc:st.wc,wp:st.wp,wn:st.wn,cal:st.cal,on:st.on}))}catch(e){}}
 function render(){
  const q=$('q').value.trim().toLowerCase();
- const L=T.filter(t=>(st.cat==='Todas'||(st.cat==='Selecionadas'?st.sel.includes(t.n):t.c===st.cat))&&(!q||t.n.toLowerCase().includes(q)||t.e.toLowerCase().includes(q)));
+ const L=T.filter(t=>(st.cat==='Todas'||(st.cat==='Selecionadas'?st.sel.includes(t.n):t.c===st.cat))&&(!q||t.n.toLowerCase().includes(q)||desc(t).toLowerCase().includes(q)));
  $('list').innerHTML=L.length?L.map(t=>{const on=st.sel.includes(t.n);
-  const k=t.k===0?'sem pontos listados':t.k+' pts de skill'+(t.p&&t.k!=null&&chain(t)!==t.k?` (${chain(t)} com pré-req.)`:'');
-  return `<button class="tr${on?' on':''}" data-n="${t.n}" aria-pressed="${on}"><span class="h"><span class="n">${on?'✓ ':''}${t.n}</span><span class="k">${k}</span></span><span class="e">${t.e}</span>${chips(t)}</button>`}).join(''):'<p class="empty">Nenhuma trait encontrada.</p>';
- $('chips').innerHTML=CATS.map(c=>`<button class="${c===st.cat?'on':''}" data-c="${c}">${c}</button>`).join('');
+  const k=t.k===0?ln('sem pontos listados','no points listed'):t.k+' '+ln('pts de skill','skill pts')+(t.p&&t.k!=null&&chain(t)!==t.k?` (${chain(t)} ${ln('com pré-req.','with prereqs')})`:'');
+  return `<button class="tr${on?' on':''}" data-n="${t.n}" aria-pressed="${on}"><span class="h"><span class="n">${on?'✓ ':''}${t.n}</span><span class="k">${k}</span></span><span class="e">${desc(t)}</span>${chips(t)}</button>`}).join(''):'<p class="empty">'+ln('Nenhuma trait encontrada.','No traits found.')+'</p>';
+ $('chips').innerHTML=CATS.map(c=>`<button class="${c===st.cat?'on':''}" data-c="${c}">${lang==='en'?CATEN[CATS.indexOf(c)]:c}</button>`).join('');
  let p=0,m=0,u=0,ins=0;st.sel.forEach(x=>{const t=M[x];p+=t.k||0;m+=t.r.marks||0;if(t.k==null)u++});curPass().forEach(x=>{p+=x.k;m+=x.r.marks||0;ins+=x.r.insight||0});ins+=15*st.wp;
  $('pts').textContent=p;$('mk').textContent=m;$('cnt').textContent=st.sel.length;$('ins').textContent=ins;const bad=st.sel.filter(x=>{const r=M[x].r;return K.some((k,i)=>r[k]>st.s[i])||r.lvl>st.lvl}).length;
  $('ptt').textContent=st.lvl-1;$('sp').textContent=sTot();$('spt').textContent=2*(st.lvl-1);$('pts').className=p>st.lvl-1?'over':'';$('sp').className=sTot()>2*(st.lvl-1)?'over':'';
  const {n,lv}=need();
- $('need').textContent=st.sel.length?'Mínimo exigido: '+(S.map((s,i)=>n[i]?`${s} ${n[i]}`:'').filter(Boolean).concat(lv?['Nível '+lv]:[]).join(' · ')||'nenhum stat')+(bad?` · ⚠ ${bad} trait(s) com requisitos não cumpridos`:''):'Selecione traits para ver os stats mínimos.';
+ $('need').textContent=st.sel.length?ln('Mínimo exigido: ','Minimum required: ')+(S.map((s,i)=>n[i]?`${s} ${n[i]}`:'').filter(Boolean).concat(lv?[ln('Nível ','Level ')+lv]:[]).join(' · ')||ln('nenhum stat','no stat'))+(bad?` · ⚠ ${bad} ${ln('trait(s) com requisitos não cumpridos','trait(s) with unmet requirements')}`:''):ln('Selecione traits para ver os stats mínimos.','Select traits to see the minimum stats.');
  renderMag();renderBuffs();renderX();save();$('code').value=mk()}
 const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 function mk(){let n=0n,sh=0n;const put=(v,b)=>{n|=BigInt(v)<<sh;sh+=BigInt(b)},g=st.mag?GM[st.mag]:null;
@@ -243,104 +249,104 @@ function dec(s){if(s.length>40)return null;let n=0n;for(const c of s){const i=B5
  return{lvl,s:s6,race:ex[0]?RC[ex[0]-1][0]:'',fam:ex[1]?FM[ex[1]-1][0]:'',ench:ex[2]?EN[ex[2]-1][0]:'',wc:ex[3]?WC[ex[3]-1]:'',wp:ex[4],mag:g?g.n:'',mp:g?g.p.filter((x,i)=>pm>>i&1).map(x=>x.n):[],sel:T.filter((t,i)=>(n>>(sh+BigInt(i)))&1n).map(t=>t.n)}}
 const curPass=()=>st.mag?GM[st.mag].p.filter(x=>st.mp.includes(x.n)):[];
 function renderMag(){
- $('mchips').innerHTML=['Nenhuma',...G.map(g=>g.n)].map(n=>`<button class="${(n==='Nenhuma'?!st.mag:n===st.mag)?'on':''}" data-m="${n}">${n}</button>`).join('');
+ $('mchips').innerHTML=['Nenhuma',...G.map(g=>g.n)].map(n=>`<button class="${(n==='Nenhuma'?!st.mag:n===st.mag)?'on':''}" data-m="${n}">${n==='Nenhuma'?ln('Nenhuma','None'):n}</button>`).join('');
  const g=GM[st.mag];
- $('mlist').innerHTML=!g?'<p class="empty">Escolha uma magia para ver as passivas.</p>':!g.p.length?`<p class="empty">${g.msg}</p>`:g.p.map(x=>{const on=st.mp.includes(x.n),r=x.r;
-  return `<button class="tr${on?' on':''}" data-p="${x.n}" aria-pressed="${on}"><span class="h"><span class="n">${on?'✓ ':''}${x.n}</span><span class="k">${x.k} pts de skill</span></span><span class="e">${x.e}</span>${r.insight?chip(`${r.insight} Insight`,'g'):''}${r.marks?chip(`${r.marks} Marks`,'g'):''}</button>`}).join('')}
+ $('mlist').innerHTML=!g?'<p class="empty">'+ln('Escolha uma magia para ver as passivas.','Pick a magic to see its passives.')+'</p>':!g.p.length?`<p class="empty">${xl(g.msg)}</p>`:g.p.map(x=>{const on=st.mp.includes(x.n),r=x.r;
+  return `<button class="tr${on?' on':''}" data-p="${x.n}" aria-pressed="${on}"><span class="h"><span class="n">${on?'✓ ':''}${x.n}</span><span class="k">${x.k} ${ln('pts de skill','skill pts')}</span></span><span class="e">${descP(x)}</span>${r.insight?chip(`${r.insight} Insight`,'g'):''}${r.marks?chip(`${r.marks} Marks`,'g'):''}</button>`}).join('')}
 let advOpen=false;
-function advBtn(){return `<button class="advb" id="advbtn" aria-expanded="${advOpen}">${advOpen?'Ocultar avançados ▴':'Stats avançados ▾'}</button>`}
+function advBtn(){return `<button class="advb" id="advbtn" aria-expanded="${advOpen}">${advOpen?ln('Ocultar avançados ▴','Hide advanced ▴'):ln('Stats avançados ▾','Advanced stats ▾')}</button>`}
 function setAdv(v){advOpen=v;$('adv').hidden=!v;$('advbtn').outerHTML=advBtn()}
 function buildStats(){
- $('stats').innerHTML=['Nível',...S].map((s,i)=>`<div class="st"><label for="s${i}">${s}</label><div class="ctl"><button data-i="${i}" data-d="-1" aria-label="Diminuir ${s}">−</button><input id="s${i}" data-i="${i}" type="number" min="${i?0:1}"${i?'':' max="80"'} inputmode="numeric" value="${i?st.s[i-1]:st.lvl}"><button data-i="${i}" data-d="1" aria-label="Aumentar ${s}">+</button></div></div>`).join('')+advBtn();
+ $('stats').innerHTML=[ln('Nível','Level'),...S].map((s,i)=>`<div class="st"><label for="s${i}">${s}</label><div class="ctl"><button data-i="${i}" data-d="-1" aria-label="${ln('Diminuir','Decrease')} ${s}">−</button><input id="s${i}" data-i="${i}" type="number" min="${i?0:1}"${i?'':' max="80"'} inputmode="numeric" value="${i?st.s[i-1]:st.lvl}"><button data-i="${i}" data-d="1" aria-label="${ln('Aumentar','Increase')} ${s}">+</button></div></div>`).join('')+advBtn();
 }
 const LV=80,sTot=()=>st.s.reduce((a,b)=>a+b,0)+2*st.wp,spent=()=>st.sel.reduce((a,x)=>a+(M[x].k||0),0)+curPass().reduce((a,x)=>a+x.k,0);
 function addCost(n){const t=M[n];return st.sel.includes(n)?0:(t.k||0)+(t.p?addCost(t.p):0)}
 function flash(t,ok){const el=$('warn');el.textContent=t;el.style.color=ok?'var(--ac)':'var(--bad)';clearTimeout(flash.t);flash.t=setTimeout(()=>{el.textContent=''},4000)}
 function clampStat(i,v){v=Math.max(0,Math.floor(+v)||0);if(!i)return Math.min(LV,Math.max(1,v));const c=st.s[i-1];return Math.min(v,Math.max(c,2*(st.lvl-1)-(sTot()-c)))}
-function setStat(i,v){const w=Math.max(0,Math.floor(+v)||0);v=clampStat(i,w);if(i&&w>v)flash('Sem pontos de stat sobrando: cada nível a partir do 2 dá 2 pontos. Suba o nível.');if(i)st.s[i-1]=v;else st.lvl=v;$('s'+i).value=v}
+function setStat(i,v){const w=Math.max(0,Math.floor(+v)||0);v=clampStat(i,w);if(i&&w>v)flash(ln('Sem pontos de stat sobrando: cada nível a partir do 2 dá 2 pontos. Suba o nível.','No stat points left: each level from 2 gives 2 points. Raise your level.'));if(i)st.s[i-1]=v;else st.lvl=v;$('s'+i).value=v}
 $('stats').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='advbtn'){setAdv(!advOpen);return}const i=+b.dataset.i;setStat(i,(i?st.s[i-1]:st.lvl)+ +b.dataset.d);render()});
-$('stats').addEventListener('input',e=>{const i=+e.target.dataset.i,raw=e.target.value;if(raw==='')return;const v=clampStat(i,raw);if(i&&+raw>v)flash('Sem pontos de stat sobrando: cada nível a partir do 2 dá 2 pontos. Suba o nível.');if(i)st.s[i-1]=v;else st.lvl=v;if(String(v)!==raw)e.target.value=v;render()});
+$('stats').addEventListener('input',e=>{const i=+e.target.dataset.i,raw=e.target.value;if(raw==='')return;const v=clampStat(i,raw);if(i&&+raw>v)flash(ln('Sem pontos de stat sobrando: cada nível a partir do 2 dá 2 pontos. Suba o nível.','No stat points left: each level from 2 gives 2 points. Raise your level.'));if(i)st.s[i-1]=v;else st.lvl=v;if(String(v)!==raw)e.target.value=v;render()});
 $('stats').addEventListener('change',e=>{const i=+e.target.dataset.i;e.target.value=i?st.s[i-1]:st.lvl});
 function add(n){const t=M[n];if(t.p)add(t.p);if(!st.sel.includes(n))st.sel.push(n)}
 function rm(n){st.sel=st.sel.filter(x=>x!==n);T.forEach(t=>{if(t.p===n&&st.sel.includes(t.n))rm(t.n)})}
-$('list').addEventListener('click',e=>{const b=e.target.closest('.tr');if(!b)return;const n=b.dataset.n;if(st.sel.includes(n))rm(n);else{const c=addCost(n),r=st.lvl-1-spent();if(c>r)return flash(`Faltam pts de skill: custa ${c} e restam ${Math.max(0,r)} (1 por nível).`);add(n)}render()});
+$('list').addEventListener('click',e=>{const b=e.target.closest('.tr');if(!b)return;const n=b.dataset.n;if(st.sel.includes(n))rm(n);else{const c=addCost(n),r=st.lvl-1-spent();if(c>r)return flash(noSkill(c,r));add(n)}render()});
 $('chips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;st.cat=b.dataset.c;render()});
 $('q').addEventListener('input',render);
 
 $('apply').addEventListener('click',()=>{const {n,lv}=need(),o=st.lvl,t=n.map((v,i)=>Math.max(v,st.s[i])),L=Math.max(st.lvl,lv,Math.ceil((t.reduce((a,b)=>a+b,0)+2*st.wp)/2)+1,spent()+1);
- if(L>LV)return flash(`Essa combinação precisa de nível ${L}, acima do máximo (${LV}).`);
+ if(L>LV)return flash(ln(`Essa combinação precisa de nível ${L}, acima do máximo (${LV}).`,`This combination needs level ${L}, above the maximum (${LV}).`));
  st.lvl=L;$('s0').value=L;t.forEach((v,i)=>{st.s[i]=v;$('s'+(i+1)).value=v});
- if(L>o)flash(`Nível subido para ${L} para caber stats e pontos.`,1);render()});
+ if(L>o)flash(ln(`Nível subido para ${L} para caber stats e pontos.`,`Level raised to ${L} to fit stats and points.`),1);render()});
 $('clear').addEventListener('click',()=>{st.on=[];st.sel=[];st.mag='';st.mp=[];st.s=[0,0,0,0,0,0];st.lvl=1;st.race=st.fam=st.ench=st.wc=st.wn='';st.wp=0;st.cal={k:0};$('warn').textContent='';$('kin').value='';buildStats();buildChar();render()});
 $('copy').addEventListener('click',async()=>{
- const txt=`Clover RPG – Build\nNível ${st.lvl} | ${S.map((s,i)=>s+' '+st.s[i]).join(' | ')}\nRaça: ${st.race||'nenhuma'} | Família: ${st.fam||'nenhuma'} | Classe de arma: ${st.wc||'nenhuma'} (prof. ${st.wp}) | Enchant: ${st.ench||'nenhum'}\nMagia: ${st.mag?st.mag+(st.mp.length?' ('+st.mp.join(', ')+')':''):'nenhuma'}\nTraits: ${st.sel.join(', ')||'nenhuma'}\nPts de skill: ${$('pts').textContent}/${$('ptt').textContent} | Pts de stat: ${$('sp').textContent}/${$('spt').textContent} | Marks: ${$('mk').textContent} | Insight: ${$('ins').textContent}\nArma: ${st.wn||'nenhuma'}\nBuffs: ${buffTxt()}\nCódigo: ${mk()}`;
- try{await navigator.clipboard.writeText(txt);$('copy').textContent='Copiado!'}catch(e){$('copy').textContent='Não foi possível copiar'}
- setTimeout(()=>{$('copy').textContent='Copiar build'},1800)});
+ const txt=buildText();
+ try{await navigator.clipboard.writeText(txt);$('copy').textContent=ln('Copiado!','Copied!')}catch(e){$('copy').textContent=ln('Não foi possível copiar','Could not copy')}
+ setTimeout(()=>{$('copy').textContent=ln('Copiar build','Copy build')},1800)});
 const say=t=>{$('imsg').textContent=t};
 function imp(){
- const raw=$('imp').value,mt=raw.match(/C[oó]digo:\s*([1-9A-HJ-NP-Za-km-z]+)/),code=mt?mt[1]:raw.replace(/\s/g,''),d=code?dec(code):null;
- if(!d)return say('Código inválido. Confira se copiou inteiro.');
+ const raw=$('imp').value,mt=raw.match(/(?:C[oó]digo|Code):\s*([1-9A-HJ-NP-Za-km-z]+)/),code=mt?mt[1]:raw.replace(/\s/g,''),d=code?dec(code):null;
+ if(!d)return say(ln('Código inválido. Confira se copiou inteiro.','Invalid code. Check that you copied all of it.'));
  const ts=new Set(d.sel);d.sel.forEach(function f(n){const p=M[n].p;if(p&&!ts.has(p)){ts.add(p);f(p)}});
  const cost=[...ts].reduce((a,n)=>a+(M[n].k||0),0)+(d.mag?d.mp.reduce((a,n)=>a+GM[d.mag].p.find(x=>x.n===n).k,0):0);
- if(d.lvl>80||d.s.reduce((a,b)=>a+b,0)+2*d.wp>2*(d.lvl-1))return say('Código inválido: nível ou stats acima do limite do jogo.');
- if(cost>d.lvl-1)return say('Código inválido: pontos de skill acima do nível.');
+ if(d.lvl>80||d.s.reduce((a,b)=>a+b,0)+2*d.wp>2*(d.lvl-1))return say(ln('Código inválido: nível ou stats acima do limite do jogo.','Invalid code: level or stats above the game limit.'));
+ if(cost>d.lvl-1)return say(ln('Código inválido: pontos de skill acima do nível.','Invalid code: skill points above your level.'));
  st.lvl=d.lvl;st.s=d.s;st.race=d.race;st.fam=d.fam;st.ench=d.ench;st.wc=d.wc;st.wp=d.wp;st.sel=[];d.sel.forEach(n=>add(n));st.mag=d.mag;st.mp=d.mp;
- $('imp').value='';buildStats();buildChar();render();say(`Build importada: nível ${st.lvl}, ${st.sel.length} traits${st.mag?' e magia '+st.mag:''}.`)}
+ $('imp').value='';buildStats();buildChar();render();say(ln(`Build importada: nível ${st.lvl}, ${st.sel.length} traits${st.mag?' e magia '+st.mag:''}.`,`Build imported: level ${st.lvl}, ${st.sel.length} traits${st.mag?' and magic '+st.mag:''}.`))}
 $('ib').addEventListener('click',imp);
 $('imp').addEventListener('keydown',e=>{if(e.key==='Enter')imp()});
 $('mchips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const n=b.dataset.m==='Nenhuma'?'':b.dataset.m;if(n!==st.mag){st.mag=n;st.mp=[]}render()});
-$('mlist').addEventListener('click',e=>{const b=e.target.closest('.tr');if(!b)return;const n=b.dataset.p;if(st.mp.includes(n))st.mp=st.mp.filter(x=>x!==n);else{const c=GM[st.mag].p.find(x=>x.n===n).k,r=st.lvl-1-spent();if(c>r)return flash(`Faltam pts de skill: custa ${c} e restam ${Math.max(0,r)} (1 por nível).`);st.mp=[...st.mp,n]}render()});
+$('mlist').addEventListener('click',e=>{const b=e.target.closest('.tr');if(!b)return;const n=b.dataset.p;if(st.mp.includes(n))st.mp=st.mp.filter(x=>x!==n);else{const c=GM[st.mag].p.find(x=>x.n===n).k,r=st.lvl-1-spent();if(c>r)return flash(noSkill(c,r));st.mp=[...st.mp,n]}render()});
 $('code').addEventListener('focus',e=>e.target.select());
-async function cp(btn,txt,lab){try{await navigator.clipboard.writeText(txt);btn.textContent='Copiado!'}catch(e){$('code').value=txt;$('code').select();btn.textContent='Copie o texto'}setTimeout(()=>{btn.textContent=lab;$('code').value=mk()},2500)}
-$('cc').addEventListener('click',()=>cp($('cc'),mk(),'Código'));
+async function cp(btn,txt,lab){try{await navigator.clipboard.writeText(txt);btn.textContent=ln('Copiado!','Copied!')}catch(e){$('code').value=txt;$('code').select();btn.textContent=ln('Copie o texto','Copy the text')}setTimeout(()=>{btn.textContent=lab;$('code').value=mk()},2500)}
+$('cc').addEventListener('click',()=>cp($('cc'),mk(),ln('Código','Code')));
 const SITE='https://iskeyzi.github.io/Clover-RPG-Builder/';
 $('cl').addEventListener('click',()=>cp($('cl'),SITE+'#b-'+mk(),'Link'));
-function fromHash(){try{const m=location.hash.match(/^#b-([1-9A-HJ-NP-Za-km-z]+)$/);if(m){$('imp').value=m[1];tab('p1');$('sh').open=true;say('Link com build detectado: toque em Importar para carregar.')}}catch(e){}}
+function fromHash(){try{const m=location.hash.match(/^#b-([1-9A-HJ-NP-Za-km-z]+)$/);if(m){$('imp').value=m[1];tab('p1');$('sh').open=true;say(ln('Link com build detectado: toque em Importar para carregar.','Build link detected: tap Import to load it.'))}}catch(e){}}
 addEventListener('hashchange',fromHash);
 const P=/^([+−-])(\d+(?:\.\d+)?)(%?) (.+)$/;
 function collect(){
  const m=new Map(),sp=[],ina=[],cnd=[];
  const add=(b,src)=>{const x=P.exec(b);if(!x)return;const v=(x[1]==='+'?1:-1)*+x[2],l=x[4].replace(/^Spell Damage$/,'Magic Damage'),el=/^(\w+) Magic Damage$/.exec(l);
-  if(el&&GM[el[1]]&&el[1]!==st.mag){ina.push(`${b} (${src}: só vale com a magia ${el[1]})`);return}
+  if(el&&GM[el[1]]&&el[1]!==st.mag){ina.push(`${b} (${src}: ${ln('só vale com a magia '+el[1],'only applies with '+el[1]+' magic')})`);return}
   const k=l+'|'+x[3],o=m.get(k)||{l,u:x[3],v:0,src:[]};o.v+=v;o.src.push(src+' '+(v>0?'+':'−')+Math.abs(v)+x[3]);m.set(k,o)};
- const r=RC.find(x=>x[0]===st.race);if(r){r[1].forEach(b=>add(b,r[0]));if(r[2])sp.push(`${r[0]}: ${r[2]}`)}
+ const r=RC.find(x=>x[0]===st.race);if(r){r[1].forEach(b=>add(b,r[0]));if(r[2])sp.push(`${r[0]}: ${xl(r[2])}`)}
  const f=FM.find(x=>x[0]===st.fam);if(f)f[2].forEach(b=>add(b,f[0]));
- st.sel.forEach(n=>{if(n==='Glass Cannon'){const v=Math.max(0,(st.s[3]-st.s[2])*.5);if(v)add(`+${v}% Magic Armor PEN`,n);else sp.push(`${n}: sem efeito enquanto Inteligência não passar a Vitalidade`)}
+ st.sel.forEach(n=>{if(n==='Glass Cannon'){const v=Math.max(0,(st.s[3]-st.s[2])*.5);if(v)add(`+${v}% Magic Armor PEN`,n);else sp.push(`${n}: ${ln('sem efeito enquanto Inteligência não passar a Vitalidade','no effect while Intelligence does not exceed Vitality')}`)}
   else{let u=0;if(TB[n]){TB[n].forEach(b=>add(b,n));u=1}
    if(TC[n]){TC[n].forEach(([b,c])=>{const id=n+'|'+b,on=st.on.includes(id);cnd.push({id,b,src:n,cond:c,on});if(on)add(b,n+' ⚡');});u=1}
-   if(!u)sp.push(`${n}: ${M[n].e}`)}});
- curPass().forEach(x=>sp.push(`${x.n}: ${x.e}`));
- const e=EN.find(x=>x[0]===st.ench);if(e)sp.push(`Enchant ${e[0]}: ${e[1]}`);
- if(st.s[0]>=50)sp.push('Black Flash desbloqueado (Força 50)');
- if(st.wc)sp.push(`Proficiência ${st.wc}: nível ${st.wp}${st.wp>3?' (acima do 3 exige a recomendação de Percival)':''}`);
+   if(!u)sp.push(`${n}: ${desc(M[n])}`)}});
+ curPass().forEach(x=>sp.push(`${x.n}: ${descP(x)}`));
+ const e=EN.find(x=>x[0]===st.ench);if(e)sp.push(`Enchant ${e[0]}: ${xl(e[1])}`);
+ if(st.s[0]>=50)sp.push(ln('Black Flash desbloqueado (Força 50)','Black Flash unlocked (Strength 50)'));
+ if(st.wc)sp.push(ln(`Proficiência ${st.wc}: nível ${st.wp}${st.wp>3?' (acima do 3 exige a recomendação de Percival)':''}`,`${WL(st.wc)} proficiency: level ${st.wp}${st.wp>3?' (above 3 requires Percival’s recommendation)':''}`));
  return{m,sp,ina,cnd}}
 const fv=o=>`${o.v>0?'+':'−'}${+Math.abs(o.v).toFixed(1)}${o.u}`;
-const GO=['Ofensivo','Defesa e sustento','Energia e mana','Progressão e utilidade'];
+const GOPT=['Ofensivo','Defesa e sustento','Energia e mana','Progressão e utilidade'],GOEN=['Offensive','Defense & sustain','Energy & mana','Progression & utility'];let GO=GOPT;
 const grp=l=>/Taken|Fall|Ragdoll|Recovery|Decay/.test(l)?GO[1]:/Damage|PEN|Enemy/.test(l)?GO[0]:/XP|Mastery|Proficiency|Sell|Carry|Climbing|Broom|Item Loss|Potion|Execution|Bomb|Ore/.test(l)?GO[3]:/Energy|Mana/.test(l)?GO[2]:GO[1];
-function buffTxt(){const {m,cnd}=collect(),a=[...m.values()].filter(o=>o.v).map(o=>`${fv(o)} ${o.l}`).join(', ')||'nenhum',c=cnd.filter(x=>!x.on).map(x=>`${x.b} (${x.cond})`).join('; ');return a+(c?' | Condicionais inativos: '+c:'')}
+function buffTxt(){const {m,cnd}=collect(),a=[...m.values()].filter(o=>o.v).map(o=>`${fv(o)} ${o.l}`).join(', ')||ln('nenhum','none'),c=cnd.filter(x=>!x.on).map(x=>`${x.b} (${xl(x.cond)})`).join('; ');return a+(c?ln(' | Condicionais inativos: ',' | Inactive conditionals: ')+c:'')}
 let lastC=[];
 function renderBuffs(){
   const {m,sp,ina,cnd}=collect(),g={};lastC=cnd;
   [...m.values()].filter(o=>o.v).forEach(o=>(g[grp(o.l)]=g[grp(o.l)]||[]).push(o));
   let h='';
-  if(cnd.length)h+=`<h3 class="bg">Condicionais (toque para simular ativo)</h3><p class="need">Valem só em situações específicas. Ao ativar, o valor entra nos Status finais.</p><div class="bt">${cnd.map((o,i)=>{const x=P.exec(o.b),v=(x[1]==='+'?1:-1)*+x[2];return `<button class="bx cb${o.on?' on':''}" data-ci="${i}" aria-pressed="${o.on}"><b>${fv({v,u:x[3]})}</b><span>${x[4]}</span><small>${o.src}</small><small class="cd2">${o.on?'✓ ativo · ':''}${o.cond}</small></button>`}).join('')}</div>`;
-  h+=`<h3 class="bg">Status finais</h3><p class="need">Soma de raça, família, traits e magia, com a origem de cada valor. Não inclui o que cada ponto de atributo rende, porque o jogo não publica esse valor.</p>`;
-  h+=GO.filter(k=>g[k]).map(k=>`<h4 class="bs">${k}</h4><div class="bt">${g[k].map(o=>`<div class="bx"><b>${fv(o)}</b><span>${o.l}</span><small>${[...new Set(o.src)].join(' · ')}</small></div>`).join('')}</div>`).join('')||'<p class="empty">Escolha raça, família, traits ou magia para ver os valores somados.</p>';
-  if(sp.length)h+=`<h3 class="bg">Efeitos especiais (sem valor numérico)</h3><ul class="sp">${sp.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-  if(ina.length)h+=`<p class="need">Inativos: ${ina.join('; ')}.</p>`;
+  if(cnd.length)h+=`<h3 class="bg">${ln('Condicionais (toque para simular ativo)','Conditionals (tap to simulate active)')}</h3><p class="need">${ln('Valem só em situações específicas. Ao ativar, o valor entra nos Status finais.','They only apply in specific situations. When active, the value is added to the Final stats.')}</p><div class="bt">${cnd.map((o,i)=>{const x=P.exec(o.b),v=(x[1]==='+'?1:-1)*+x[2];return `<button class="bx cb${o.on?' on':''}" data-ci="${i}" aria-pressed="${o.on}"><b>${fv({v,u:x[3]})}</b><span>${x[4]}</span><small>${o.src}</small><small class="cd2">${o.on?ln('✓ ativo · ','✓ active · '):''}${xl(o.cond)}</small></button>`}).join('')}</div>`;
+  h+=`<h3 class="bg">${ln('Status finais','Final stats')}</h3><p class="need">${ln('Soma de raça, família, traits e magia, com a origem de cada valor. Não inclui o que cada ponto de atributo rende, porque o jogo não publica esse valor.','Sum of race, family, traits and magic, with the source of each value. It does not include what each attribute point gives, because the game does not publish that value.')}</p>`;
+  h+=GO.filter(k=>g[k]).map(k=>`<h4 class="bs">${k}</h4><div class="bt">${g[k].map(o=>`<div class="bx"><b>${fv(o)}</b><span>${o.l}</span><small>${[...new Set(o.src)].join(' · ')}</small></div>`).join('')}</div>`).join('')||'<p class="empty">'+ln('Escolha raça, família, traits ou magia para ver os valores somados.','Pick a race, family, traits or magic to see the summed values.')+'</p>';
+  if(sp.length)h+=`<h3 class="bg">${ln('Efeitos especiais (sem valor numérico)','Special effects (no numeric value)')}</h3><ul class="sp">${sp.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  if(ina.length)h+=`<p class="need">${ln('Inativos','Inactive')}: ${ina.join('; ')}.</p>`;
   $('buffs').innerHTML=h}
 $('buffs').addEventListener('click',e=>{const b=e.target.closest('.cb');if(!b)return;const o=lastC[+b.dataset.ci];if(!o)return;st.on=st.on.includes(o.id)?st.on.filter(x=>x!==o.id):[...st.on,o.id];render()});
 function buildChar(){
  const op=(a,s,f=x=>x)=>a.map(x=>`<option${f(x)===s?' selected':''}>${f(x)}</option>`).join('');
- $('chr').innerHTML=`<label>Raça<select id="c-race"><option value="">Nenhuma</option>${op(RC,st.race,x=>x[0])}</select></label>
-<label>Família<select id="c-fam"><option value="">Nenhuma</option>${FR.map((r,i)=>`<optgroup label="${r}">${op(FM.filter(f=>f[1]===i),st.fam,x=>x[0])}</optgroup>`).join('')}</select></label>
-<label>Classe de arma<select id="c-wc"><option value="">Nenhuma</option>${op(WC,st.wc)}</select></label>
-<label>Proficiência (0–10)<input id="c-wp" type="number" min="0" max="10" inputmode="numeric" value="${st.wp}"></label>
-<label>Enchant da arma<select id="c-en"><option value="">Nenhum</option>${op(EN,st.ench,x=>x[0])}</select></label>`}
+ $('chr').innerHTML=`<label>${ln('Raça','Race')}<select id="c-race"><option value="">${ln('Nenhuma','None')}</option>${op(RC,st.race,x=>x[0])}</select></label>
+<label>${ln('Família','Family')}<select id="c-fam"><option value="">${ln('Nenhuma','None')}</option>${FR.map((r,i)=>`<optgroup label="${r}">${op(FM.filter(f=>f[1]===i),st.fam,x=>x[0])}</optgroup>`).join('')}</select></label>
+<label>${ln('Classe de arma','Weapon class')}<select id="c-wc"><option value="">${ln('Nenhuma','None')}</option>${WC.map((x,i)=>`<option value="${x}"${x===st.wc?' selected':''}>${lang==='en'?WCEN[i]:x}</option>`).join('')}</select></label>
+<label>${ln('Proficiência (0–10)','Proficiency (0–10)')}<input id="c-wp" type="number" min="0" max="10" inputmode="numeric" value="${st.wp}"></label>
+<label>${ln('Enchant da arma','Weapon enchant')}<select id="c-en"><option value="">${ln('Nenhum','None')}</option>${op(EN,st.ench,x=>x[0])}</select></label>`}
 $('chr').addEventListener('change',e=>{const id=e.target.id,v=e.target.value;
  if(id==='c-race')st.race=v;else if(id==='c-fam')st.fam=v;else if(id==='c-wc')st.wc=v;else if(id==='c-en')st.ench=v;
  else if(id==='c-wp'){const raw=Math.max(0,Math.min(10,Math.floor(+v)||0)),free=Math.max(0,2*(st.lvl-1)-(sTot()-2*st.wp)),w=Math.min(raw,Math.floor(free/2));
-  if(w<raw)flash('Sem pontos de stat sobrando: cada nível de proficiência custa 2 (e 15 Insight).');st.wp=w;e.target.value=w}
+  if(w<raw)flash(ln('Sem pontos de stat sobrando: cada nível de proficiência custa 2 (e 15 Insight).','No stat points left: each proficiency level costs 2 (and 15 Insight).'));st.wp=w;e.target.value=w}
  render()});
 const CL={L:'Leve',M:'Média',H:'Pesada'};
 const W=`Arachne's Venom Fang|L|12|7.75|.9|7|5|4;Assembly Fang|L|7|7.75|.925|2|4|4;Bloodthorne|L|13|7.75|.925|8|7|4;Dull Dagger|L|5|7.5|.925|1|3|4;Eldrean Sickle|L|9|4|.925|5|5|4;Bronze Ironclad Gauntlets|L|11|8.25|.85|5|5|5;Rose Ironclad Gauntlets|L|11|8.25|.85|5|5|5;Clover Gauntlets|L|18|8.25|.85|5|7|4;Dull Gauntlets|L|6|8.25|.85|1|3|4;Dull Rapier|L|6|9|.78|1|3|4;Elderthorne|L|14|9|.835|6|6|5;Luminous Thorn|L|15|9|.8|7|6|5;Skullsplitter|L|11|9|.8|5|5|4;Winding Thorn|L|10|9|.8|3|5|4;Vulcan's Knife|L|8|7.5|.925|3|4|5;Vulcan's Rapier|L|9|9|.78|3|4|4;Purple Hachiman|M|14|8.5|.75|4|5|6;Red Hachiman|M|14|8.5|.75|4|5|6;Blue Mystbloom Staff|M|16|8.75|.67|7|6|5;Pink Mystbloom Staff|M|16|8.75|.67|7|6|5;Purple Widowbane|M|14|9.5|.725|6|7|7;Red Widowbane|M|14|9.5|.725|6|7|7;Gold Trishula|M|12|9.5|.7|4|5|5;Silver Trishula|M|12|9.5|.7|4|5|5;Assembly Blade|M|10|8.5|.765|2|5|5;Balmung|M|17|8.5|.7|8|6|6;Cinderblade|M|15|8.5|.7|5|6|7;Dragnipur|M|15|8.5|.765|7|5|5;Eldritch Staff|M|9|8.75|.67|2|4|5;Kamo Spear|M|9|9.5|.7|2|5|5;Katana|M|9|8.5|.75|2|7|5;Legendary Kata|M|6|8|.725|1|3|5;Novice Blade|M|6|8.5|.725|1|3|5;Rustic Spear|M|6|9.5|.7|1|3|5;Skullspire Blade|M|14|8.5|.775|6|6|6;Wayfarer's Scimitar|M|13|8.5|.7|4|7|5;Vulcan's Cutlass|M|10|8.5|.775|3|6|5;Vulcan's Spear|M|11|9.5|.725|3|5|6;Elkstrider|H|21|9.5|.52|6|6|8;Wanderer's Edge|H|21|9.5|.52|6|6|8;Bone Reaper|H|19|10|.625|7|6|8;Buster Sword|H|17|9.5|.52|3|6|7;Carnage Cleaver|H|18|9.5|.52|6|7|7;Ceremonial Greataxe|H|23|9.5|.52|8|7|7;Claymore|H|13|9.5|.52|2|5|7;Dull Longsword|H|9|9.5|.55|1|3|6;Executioner's Axe|H|20|9.5|.575|5|6|7;Highland Axe|H|19|9.5|.575|3|6|7;Mournblade|H|22|9.5|.55|7|7|7;Mourning Edge|H|15|9.5|.52|4|6|7;Primeval Battleaxe|H|20|10|.5|7|6|8;Splinterspike|H|18|9.5|.52|6|7|7;Vulcan's Greatsword|H|16|9.5|.55|3|5|7`.split(';').map(r=>{const[n,c,d,a,s,q,k,w]=r.split('|');return{n,c,d:+d,a:+a,s:+s,q:+q,k:+k,w:+w}}).sort((x,y)=>y.d-x.d);
@@ -351,16 +357,135 @@ function tot(){const m=[...collect().m.values()],g=(l,u='')=>m.filter(o=>o.l===l
 function renderX(){
  const X=tot(),cd=(l,v,n='')=>`<div class="bx"><b>${v}</b><span>${l}</span><small>${n}</small></div>`;
  const wl=W.filter(w=>!st.wc||CL[w.c]===st.wc);if(!wl.some(w=>w.n===st.wn))st.wn='';
- $('wsel').innerHTML='<option value="">—</option>'+wl.map(w=>`<option value="${w.n}"${w.n===st.wn?' selected':''}>${w.n} · ${CL[w.c]} · dano ${w.d} · prof ${w.q}</option>`).join('');
+ $('wsel').innerHTML='<option value="">—</option>'+wl.map(w=>`<option value="${w.n}"${w.n===st.wn?' selected':''}>${w.n} · ${WL(CL[w.c])} · ${ln('dano','dmg')} ${w.d} · prof ${w.q}</option>`).join('');
  const w=W.find(x=>x.n===st.wn),fin=x=>pd(x)*(1+X.pf/100);
- $('wout').innerHTML=w?`<div class="bt">${cd('Dano base',w.d)}${cd('Com proficiência '+st.wp,f1(pd(w)),`scaling ${w.k} × prof ${st.wp} × k ${st.cal.k||1}%${st.cal.k?'':' (estimativa)'}`)}${cd('Final com buffs',f1(fin(w)),'+'+f1(X.pf)+'% dano físico')}${cd('Final × velocidade',f1(fin(w)*w.s),'vel. '+w.s)}${cd('Alcance',w.a)}${cd('Peso',w.w)}${cd('Scaling',w.k)}${cd('Req. proficiência',w.q,st.wp<w.q?'⚠ você tem '+st.wp:'ok')}</div>`:'<p class="empty">Escolha uma arma.</p>';
+ $('wout').innerHTML=w?`<div class="bt">${cd(ln('Dano base','Base damage'),w.d)}${cd(ln('Com proficiência ','With proficiency ')+st.wp,f1(pd(w)),`scaling ${w.k} × prof ${st.wp} × k ${st.cal.k||1}%${st.cal.k?'':ln(' (estimativa)',' (estimate)')}`)}${cd(ln('Final com buffs','Final with buffs'),f1(fin(w)),'+'+f1(X.pf)+ln('% dano físico','% physical damage'))}${cd(ln('Final × velocidade','Final × speed'),f1(fin(w)*w.s),ln('vel. ','speed ')+w.s)}${cd(ln('Alcance','Range'),w.a)}${cd(ln('Peso','Weight'),w.w)}${cd('Scaling',w.k)}${cd(ln('Req. proficiência','Req. proficiency'),w.q,st.wp<w.q?ln('⚠ você tem ','⚠ you have ')+st.wp:'ok')}</div>`:'<p class="empty">'+ln('Escolha uma arma.','Pick a weapon.')+'</p>';
 }
 $('wsel').addEventListener('change',e=>{st.wn=e.target.value;render()});
 $('kin').addEventListener('input',e=>{st.cal.k=Math.max(0,+e.target.value||0);render()});
 $('kin').value=st.cal.k||'';
 function tab(t){document.querySelectorAll('#tabs button').forEach(b=>{const on=b.dataset.t===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});['p1','p2'].forEach(id=>{$(id).hidden=id!==t});const k=$('kpibox');k.classList.toggle('stk',t==='p2');if(t==='p1')$('p1').insertBefore(k,$('acts'));else $('p2').insertBefore(k,$('p2').firstChild);window.scrollTo(0,0)}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)tab(b.dataset.t)});
-buildStats();buildChar();render();fromHash();
+const ln=(p,e)=>lang==='en'?e:p;
+const WL=k=>lang==='en'?({Leve:'Light',Média:'Medium',Pesada:'Heavy'}[k]||k):k;
+const TEN={
+'Weapons Expert':'You are a natural with weapons. You gain weapon proficiency 50% faster.',
+'Rapid Recovery':'The time it takes for you to recover after being knocked is cut in half.',
+'Iron Rebound':'Your body adapts to impacts, reducing ragdoll effects. The duration of all ragdoll effects are decreased by 15%.',
+'Unyielding Bastion':'After being ragdolled, gain immunity to ragdoll effects for a short duration (40 second cooldown).',
+'Pacifist':'While out of combat, you regenerate health twice as fast.',
+'Sixth Sense':'When out of combat, automatically evade the first attack that hits you (120s cooldown).',
+'Survivor’s Fury':'When below 25%, deal 10% more damage.',
+'Potion Savant':'Potions are 20% more effective.',
+'Pick-Me-Up':'You lose 40% less items on death.',
+'Critical Aerial':'Your aerial M2 now block breaks.',
+'Dirty Casting':'While out of combat with your grimoire hidden, the next spell you use will deal 15% more damage.',
+'Glass Cannon':'Gain 0.5% magic armor penetration for each point your Intelligence exceeds your Vitality.',
+'Bombmaker’s Manifesto':'Your mana bombs now scale with your Intelligence, allowing each explosion to reflect the Bombmaker’s calculated power.',
+'Efficient Ignition':'You have a 25% chance to not consume a bomb when using it.',
+'Lucky Miner':'Grants a 30% chance to yield double the ore when mining.',
+'Spellguard':'Gain 5% damage reduction towards magic-based attacks.',
+'Mob Slayer':'Deal 10% more damage to mobs.',
+'Swift Execution':'Execution speed is 20% faster.',
+'Tailwind':'Your flying speed on a broom is increased by 15%.',
+'Air Dash':'Perform a quick dash in any direction while airborne.',
+'Bargain Master':'Your overwhelming influence ensures 15% higher rates when selling goods to merchants.',
+'Rapid Reflex':'Upon roll canceling, gain the ability to dodge again. Doing so increases your dodge cooldown.',
+'Tempered Body':'Gain 5% damage reduction towards physical-based attacks.',
+'Hyper Adrenaline':'When below 25%, incoming damage is reduced by 10%.',
+'Exhaustion Blow':'Block breaking an enemy decreases your resolve by 50%.',
+'Reinforced Blade':'All physical attacks have +5% more PEN.',
+'Liver Shot':'Your misdirect now deals 20% more damage.',
+'Overflow':'Blockbreaking an opponent grants +15% Physical PEN for 4 seconds.',
+'Crippling Fakeout':'Landing a misdirect temporarily slows the target’s movement (15s cooldown).',
+'Blunt Alignment':'Your misdirects have a chance to align perfectly, multiplying their force into a devastating blow.',
+'Pack Mule':'Increases your carry weight by 10.',
+'Climbing Mastery':'Increases the user’s climbing ability by 15%.',
+'Soft Landing':'Damage taken from fall damage is cut in half.',
+'Aerial Pursuit':'Swiftly teleport to enemies with their back turned, delivering a powerful strike and quickly closing the distance.',
+'Graceful Escape':'Your dodge frames are increased by 10%.',
+'Arcane Rebound':'Parrying or dodging an attack now restores 5% of your mana.',
+'Superiority Complex':'When attacking an opponent with the same magic as you, deal 5% more damage.',
+'Steadfast':'Your resolve meter passively decreases 20% faster.',
+'Follow Through':'Landing a misdirect now grants a brief speed boost.',
+'Deceptive Momentum':'Landing a misdirect allows you to roll again.',
+'Panic Attack':'When below 35% health, deal more posture damage.',
+'Exhaustion Strike':'Block breaking an enemy now resets their resolve to 25%.',
+'Strong Core':'Upon being block broken, gain 10% damage resistance for a short amount of time.',
+'Mad Alchemist':'You drink potions 25% faster.'};
+const PEN={
+'Amplified Wrath':'If a person is on fire, deal extra damage with your M1s.',
+'Blazing Meteor':'Holding RMB when activating Scorching Barrage transforms the barrage into a singular, much larger meteor.',
+'Infernal Defiance':'When an enemy attempts to execute you, unleash a burst of flames that disrupts the execution and stuns nearby foes briefly (60s cooldown).',
+'Shattering Ember':'Block breaking an enemy with Flame magic sets off a fiery explosion on them, damaging, burning and knocking back everyone nearby. Scales with Magic Power (60s cooldown).',
+'Aerial Efficiency':'While airborne, your wind abilities take 30% less mana to cast.',
+'Blade Storm':'Holding RMB when activating Tempest Blade summons an additional 2 blades to the spell.',
+'Lightning Pulse':'While “Lightning Shroud” is active, your dodges are powered with lightning.',
+'Rain Dancer':'Your abilities now deal more damage when it’s raining.',
+'Stormcaller’s Respite':'After landing a lightning ability, there is a 40% chance your M1s are imbued with thunder for 10 seconds. (8 Sec. Cooldown)',
+'Fear The Shadows':'Your shadow abilities do more damage during the night-time.',
+'Focused Beam':'Holding RMB when activating Void Beam transforms the barrage into a single, more powerful shot.',
+'Chrono Surge':'Holding RMB and dodging consumes mana, but allows the user to instantly shift through space for a quick reposition.',
+'Temporal Overflow':'Every 15 magic intensity grants the user the ability to store an additional time orb, expanding their capacity to manipulate time.',
+'Timeflux':'Time abilities enhanced by a time orb consume less mana.'};
+const XEN={
+'queima o alvo a cada alguns golpes':'burns the target every few hits',
+'congela o alvo (mini stun)':'freezes the target (mini stun)',
+'rouba vida do alvo':'steals health from the target',
+'eletrocuta o alvo':'electrocutes the target',
+'teleporta você para as costas do alvo':'teleports you behind the target',
+'+15% de dano com mais de 70% ou menos de 30% de vida':'+15% damage above 70% or below 30% health',
+'cura breve após sofrer dano':'brief healing after taking damage',
+'Wrath Unbound e Hellsworn (efeito de contrato não confirmado)':'Wrath Unbound and Hellsworn (contract effect not confirmed)',
+'Heavenbound e Divine Retribution (efeito de contrato não confirmado)':'Heavenbound and Divine Retribution (contract effect not confirmed)',
+'vida abaixo de 25%':'health below 25%',
+'após quebrar o bloqueio do inimigo (4 s)':'after breaking the enemy’s block (4 s)',
+'ao quebrar o bloqueio do inimigo':'when breaking the enemy’s block',
+'após ter o bloqueio quebrado (breve)':'after your block is broken (brief)',
+'contra oponente com a mesma magia':'against an opponent with the same magic',
+'próxima magia, fora de combate, grimório guardado':'next spell, out of combat, grimoire hidden',
+'fora de combate':'out of combat',
+'ao aparar ou esquivar de um ataque':'when parrying or dodging an attack',
+'A Beast não tem passivas no momento, segundo a wiki.':'Beast currently has no passives, according to the wiki.',
+'Passivas da Light ainda não cadastradas: faltam dados da wiki.':'Light passives are not added yet: wiki data is missing.'};
+const desc=t=>(lang==='en'&&TEN[t.n])||t.e,descP=x=>(lang==='en'&&PEN[x.n])||x.e,xl=s=>(lang==='en'&&XEN[s])||s;
+const noSkill=(c,r)=>ln(`Faltam pts de skill: custa ${c} e restam ${Math.max(0,r)} (1 por nível).`,`Not enough skill points: costs ${c}, ${Math.max(0,r)} left (1 per level).`);
+function buildText(){const n=ln('nenhuma','none');
+return ['Clover RPG – Build',
+`${ln('Nível','Level')} ${st.lvl} | ${S.map((s,i)=>s+' '+st.s[i]).join(' | ')}`,
+`${ln('Raça','Race')}: ${st.race||n} | ${ln('Família','Family')}: ${st.fam||n} | ${ln('Classe de arma','Weapon class')}: ${st.wc?WL(st.wc):n} (prof. ${st.wp}) | Enchant: ${st.ench||ln('nenhum','none')}`,
+`${ln('Magia','Magic')}: ${st.mag?st.mag+(st.mp.length?' ('+st.mp.join(', ')+')':''):n}`,
+`Traits: ${st.sel.join(', ')||n}`,
+`${ln('Pts de skill','Skill pts')}: ${$('pts').textContent}/${$('ptt').textContent} | ${ln('Pts de stat','Stat pts')}: ${$('sp').textContent}/${$('spt').textContent} | Marks: ${$('mk').textContent} | Insight: ${$('ins').textContent}`,
+`${ln('Arma','Weapon')}: ${st.wn||n}`,`Buffs: ${buffTxt()}`,`${ln('Código','Code')}: ${mk()}`].join('\n')}
+const UIEN={h1:'Clover RPG · Character Builder',
+sub:'Plan your stats, race, family, weapon, traits and magic. Buffs are shown by source and summed.',
+tab1:'Character',tab2:'Traits & magic',hChar:'Character',
+profNote:'Weapon proficiency: each level costs 2 stat points and 15 Insight; above level 3 you need Percival’s recommendation.',
+hWeapon:'Weapon',lWeapon:'Equipped weapon',lK:'Calibration k (%)',kinPh:'default 1',
+hAdv:'Advanced stats',hDmg:'Weapon damage',
+kNote:'Proficiency damage = base × (1 + scaling × prof × k/100). The game does not publish k. To find it: read the weapon damage in the tooltip and compute k = (tooltip ÷ base − 1) × 100 ÷ (scaling × prof). Empty = estimate k=1, which is not an official number.',
+kSkill:'Skill pts',kStat:'Stat pts',bApply:'Adjust to minimum',bClear:'Clear',bCopy:'Copy build',
+shSum:'Share build',shNote:'Copy the code or the link and send it. To import, paste the code (or the text from “Copy build”) in the field below.',
+ariaCode:'Your code',bCode:'Code',impPh:'Paste the code here',ariaImp:'Code to import',bImp:'Import',
+hMagic:'Magic (grimoire)',magNote:'Passives are learned from the Grimoire Echo in the Inner Realm. Tap to add to the cost.',
+qPh:'Search trait…',ariaQ:'Search trait',
+foot:'Traits and magic passives: Clover RPG wiki. Rules used: each level from 2 onward gives 2 stat points and 1 skill point (level 1 starts with no points; traits and passives only spend skill points); max level 80. Races, families, enchants and weapons come from community wikis and may be outdated or incomplete; elemental family bonuses only count with the matching magic. The game is in early access and numbers change: check in game before spending points. The share code includes level, stats, race, family, enchant, weapon class, proficiency, traits, magic and passives; the chosen weapon, k and conditionals are saved only in the browser.'};
+const TITLE_PT=document.title;
+function applyLang(){
+ const en=lang==='en';document.documentElement.lang=en?'en':'pt-BR';
+ S=en?SEN:SPT;GO=en?GOEN:GOPT;FR=en?FREN:FRPT;
+ document.querySelectorAll('[data-x]').forEach(e=>{if(e.dataset.pt===undefined)e.dataset.pt=e.innerHTML;e.innerHTML=en?UIEN[e.dataset.x]:e.dataset.pt});
+ document.querySelectorAll('[data-xp]').forEach(e=>{if(e.dataset.ptp===undefined)e.dataset.ptp=e.placeholder;e.placeholder=en?UIEN[e.dataset.xp]:e.dataset.ptp});
+ document.querySelectorAll('[data-xa]').forEach(e=>{if(e.dataset.pta===undefined)e.dataset.pta=e.getAttribute('aria-label');e.setAttribute('aria-label',en?UIEN[e.dataset.xa]:e.dataset.pta)});
+ document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
+ document.title=en?'Clover RPG – Character Builder':TITLE_PT;
+ $('warn').textContent='';$('imsg').textContent='';
+ try{localStorage.setItem('clover-lang',lang)}catch(e){}
+ buildStats();buildChar();render()}
+document.querySelector('.lang').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.dataset.l===lang)return;lang=b.dataset.l;applyLang()});
+
+applyLang();fromHash();
 </script>
 </body>
 </html>
